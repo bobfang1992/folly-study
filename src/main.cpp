@@ -16,7 +16,8 @@ folly::coro::Task<int> slow()
 int main(int argc, char **argv)
 {
     folly::init(&argc, &argv);
-    folly::coro::blockingWait(
+    auto result = folly::coro::blockingWait(
         slow().scheduleOn(folly::getGlobalCPUExecutor().get()));
+    std::cout << result << std::endl;
     return 0;
 }
