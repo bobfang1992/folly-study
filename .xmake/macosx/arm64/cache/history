@@ -1,0 +1,13 @@
+{
+    cmdlines = {
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/update_intellisense.lua .vscode",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/explorer.lua",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/config.lua",
+        "xmake build",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/explorer.lua",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/update_intellisense.lua .vscode",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/config.lua",
+        "xmake l /Users/bobfang/.vscode/extensions/tboox.xmake-vscode-1.7.3/assets/explorer.lua",
+        "xmake build"
+    }
+}

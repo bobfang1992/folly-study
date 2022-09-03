@@ -1,0 +1,14 @@
+checking for Xcode directory ... %s
+checking for Codesign Identity of Xcode ... no
+checking for SDK version of Xcode for macosx (arm64) ... nil
+checking for Minimal target version of Xcode for macosx (arm64) ... nil
+[ 62%]: cache compiling.release src/main.cpp
+[ 75%]: linking.release xmake-test
+error: Undefined symbols for architecture arm64:
+  "folly::resumeCoroutineWithNewAsyncStackRoot(std::experimental::coroutines_v1::coroutine_handle<void>, folly::AsyncStackFrame&)", referenced from:
+      folly::coro::detail::BlockingWaitTask<int&>::get(folly::AsyncStackFrame&) && in main.cpp.o
+      void folly::detail::function::FunctionTraits<void ()>::callSmall<void folly::coro::TaskWithExecutor<int>::Awaiter::await_suspend<folly::coro::detail::BlockingWaitPromise<int&> >(std::experimental::coroutines_v1::coroutine_handle<folly::coro::detail::BlockingWaitPromise<int&> >)::'lambda'()>(folly::detail::function::Data&) in main.cpp.o
+      folly::coro::detail::WithAsyncStackCoroutine::create() (.resume) in main.cpp.o
+ld: symbol(s) not found for architecture arm64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+
