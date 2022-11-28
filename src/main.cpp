@@ -8,7 +8,7 @@
 folly::coro::Task<int> slow()
 {
     std::cout << "before sleep" << std::endl;
-    co_await folly::futures::sleep(std::chrono::seconds{11});
+    co_await folly::futures::sleep(std::chrono::seconds{1});
     std::cout << "after sleep" << std::endl;
     co_return 1;
 }
