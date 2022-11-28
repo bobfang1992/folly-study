@@ -1,10 +1,8 @@
 #include "demolib.h"
-
-namespace DemoLib
+namespace Demolib
 {
     int add(int a, int b)
     {
-
         return a + b;
     }
-} // namespace DemoLib
+}

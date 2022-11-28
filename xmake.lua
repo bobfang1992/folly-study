@@ -1,6 +1,7 @@
 add_rules("mode.debug", "mode.release")
 add_requires("folly 2022.08.29", {configs = {cxxstd = "c++20"}})
 add_requires("fmt")
+add_requires("gtest")
 
 set_languages("c++20")
 
@@ -16,4 +17,14 @@ target("xmake-test")
     add_deps("demolib")
     add_packages("folly")
     add_packages("fmt")
+
+target("gtest-test")
+    add_deps("demolib")
+    set_kind("binary")
+    add_files("tests/*.cpp")
+    add_includedirs("src/demolib")
+    add_defines("FOLLY_HAS_COROUTINES")
+    add_packages("folly")
+    add_packages("fmt")
+    add_packages("gtest")
 
