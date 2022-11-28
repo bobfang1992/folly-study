@@ -5,6 +5,8 @@
 #include <folly/init/Init.h>
 #include <iostream>
 
+#include "demolib.h"
+
 folly::coro::Task<int> slow()
 {
     std::cout << "before sleep" << std::endl;
@@ -19,5 +21,6 @@ int main(int argc, char **argv)
     auto result = folly::coro::blockingWait(
         slow().scheduleOn(folly::getGlobalCPUExecutor().get()));
     std::cout << result << std::endl;
+    std::cout << Demolib::add(1, 2) << std::endl;
     return 0;
 }

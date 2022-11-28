@@ -4,11 +4,16 @@ add_requires("fmt")
 
 set_languages("c++20")
 
+target("demolib")
+    set_kind("static")
+    add_files("src/demolib/*.cpp")
 
 target("xmake-test")
     set_kind("binary")
     add_files("src/*.cpp")
+    add_includedirs("src/demolib")
     add_defines("FOLLY_HAS_COROUTINES")
+    add_deps("demolib")
     add_packages("folly")
     add_packages("fmt")
 
