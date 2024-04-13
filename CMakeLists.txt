@@ -5,15 +5,13 @@
 # project
 cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
-project(demolib LANGUAGES CXX C)
+project(demolib LANGUAGES CXX)
 
 # target
 add_library(demolib STATIC "")
 set_target_properties(demolib PROPERTIES OUTPUT_NAME "demolib")
-set_target_properties(demolib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(demolib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/arm64-v8a/release")
 target_compile_options(demolib PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
     $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
@@ -39,31 +37,29 @@ target_sources(demolib PRIVATE
 # target
 add_executable(gtest-test "")
 set_target_properties(gtest-test PROPERTIES OUTPUT_NAME "gtest-test")
-set_target_properties(gtest-test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(gtest-test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/arm64-v8a/release")
 add_dependencies(gtest-test demolib)
 target_include_directories(gtest-test PRIVATE
     src/demolib
 )
-target_include_directories(gtest-test PRIVATE
-    /home/ubuntu/.xmake/packages/f/folly/2022.08.29/3928b6f3d9f243bdafdaddb46e1f77f4/include
-    /home/ubuntu/.xmake/packages/b/boost/1.80.0/f82d4dca7dc844e89e4b80d3aa3e4eed/include
-    /home/ubuntu/.xmake/packages/l/libevent/2.1.12/79b493131d804853b402613ca7d86ec3/include
-    /home/ubuntu/.xmake/packages/o/openssl/1.1.1-q/0542b0491c164d4dadba757a6e268ba2/include
-    /home/ubuntu/.xmake/packages/d/double-conversion/v3.1.5/e029f0fe5b164280997aa8ab5d2a6640/include
-    /home/ubuntu/.xmake/packages/g/glog/v0.6.0/98bb9424878c424382eb29e8237853f9/include
-    /home/ubuntu/.xmake/packages/g/gflags/v2.2.2/0f545414272c459b907061d5e923ed20/include
-    /home/ubuntu/.xmake/packages/f/fmt/9.1.0/d363b063d73b40728217e45838c2553c/include
-    /home/ubuntu/.xmake/packages/b/bzip2/1.0.8/8db6bd46210f4711a452b7767b44748c/include
-    /home/ubuntu/.xmake/packages/l/lz4/v1.9.3/55e9aa7ed4014be287ab80a488dfae47/include
-    /home/ubuntu/.xmake/packages/z/zstd/v1.5.2/b78d253e3a8244dbb2b8ed324963b0c2/include
-    /home/ubuntu/.xmake/packages/g/gtest/1.12.1/77b9096bc4b34d9282f672d36b015ba9/include
+target_include_directories(gtest-test SYSTEM PRIVATE
+    /home/bobfang/.xmake/packages/f/folly/2024.04.01/4256dda8f7dd4b8d872ed585ac433f5c/include
+    /home/bobfang/.xmake/packages/b/boost/1.84.0/f3bd7a099e92433ea53a951c7a951171/include
+    /home/bobfang/.xmake/packages/l/libevent/2.1.12/9e026e2854514c4b8af726610c6407db/include
+    /home/bobfang/.xmake/packages/o/openssl3/3.0.7/e197aa355a51487f89ddfeab16707b44/include
+    /home/bobfang/.xmake/packages/d/double-conversion/v3.3.0/3db029d9260c432eb5af53e7ef24fcbd/include
+    /home/bobfang/.xmake/packages/g/glog/v0.6.0/97af1b735ee34653bce0fbb94d6210b8/include
+    /home/bobfang/.xmake/packages/g/gflags/v2.2.2/96c154a9ef6c401fb5551d54f6330dbf/include
+    /home/bobfang/.xmake/packages/f/fmt/10.2.1/505ef80b74ab4417864cda7867f207e9/include
+    /home/bobfang/.xmake/packages/b/bzip2/1.0.8/f3d161f5f92f487e939d378246898edf/include
+    /home/bobfang/.xmake/packages/l/lz4/v1.9.4/d4d593480882402f8a0bc78e8649d9cf/include
+    /home/bobfang/.xmake/packages/z/zstd/v1.5.5/3c8af7caf7bc4d92ba18f14f3681775c/include
+    /home/bobfang/.xmake/packages/g/gtest/v1.14.0/689a2929450e473e9cd578d308dd827f/include
 )
 target_compile_definitions(gtest-test PRIVATE
     FOLLY_HAS_COROUTINES
 )
 target_compile_options(gtest-test PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
     $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
@@ -83,21 +79,23 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 target_link_libraries(gtest-test PRIVATE
+    folly
     folly_test_util
     follybenchmark
-    folly
     boost_context-mt
     boost_regex-mt
     boost_system-mt
     boost_atomic-mt
+    boost_date_time-mt
+    boost_iostreams-mt
     boost_program_options-mt
     boost_thread-mt
     boost_filesystem-mt
-    event_pthreads
+    event_core
     event_extra
+    event_pthreads
     event_openssl
     event
-    event_core
     ssl
     crypto
     double-conversion
@@ -108,30 +106,26 @@ target_link_libraries(gtest-test PRIVATE
     bz2
     lz4
     zstd
-    gmock
-    gtest_main
     gtest
+    gmock
     demolib
     pthread
     dl
 )
 target_link_directories(gtest-test PRIVATE
-    /home/ubuntu/.xmake/packages/f/folly/2022.08.29/3928b6f3d9f243bdafdaddb46e1f77f4/lib
-    /home/ubuntu/.xmake/packages/b/boost/1.80.0/f82d4dca7dc844e89e4b80d3aa3e4eed/lib
-    /home/ubuntu/.xmake/packages/l/libevent/2.1.12/79b493131d804853b402613ca7d86ec3/lib
-    /home/ubuntu/.xmake/packages/o/openssl/1.1.1-q/0542b0491c164d4dadba757a6e268ba2/lib
-    /home/ubuntu/.xmake/packages/d/double-conversion/v3.1.5/e029f0fe5b164280997aa8ab5d2a6640/lib
-    /home/ubuntu/.xmake/packages/g/glog/v0.6.0/98bb9424878c424382eb29e8237853f9/lib
-    /home/ubuntu/.xmake/packages/g/gflags/v2.2.2/0f545414272c459b907061d5e923ed20/lib
-    /home/ubuntu/.xmake/packages/f/fmt/9.1.0/d363b063d73b40728217e45838c2553c/lib
-    /home/ubuntu/.xmake/packages/b/bzip2/1.0.8/8db6bd46210f4711a452b7767b44748c/lib
-    /home/ubuntu/.xmake/packages/l/lz4/v1.9.3/55e9aa7ed4014be287ab80a488dfae47/lib
-    /home/ubuntu/.xmake/packages/z/zstd/v1.5.2/b78d253e3a8244dbb2b8ed324963b0c2/lib
-    /home/ubuntu/.xmake/packages/g/gtest/1.12.1/77b9096bc4b34d9282f672d36b015ba9/lib
-    build/linux/x86_64/release
-)
-target_link_options(gtest-test PRIVATE
-    -m64
+    /home/bobfang/.xmake/packages/f/folly/2024.04.01/4256dda8f7dd4b8d872ed585ac433f5c/lib
+    /home/bobfang/.xmake/packages/b/boost/1.84.0/f3bd7a099e92433ea53a951c7a951171/lib
+    /home/bobfang/.xmake/packages/l/libevent/2.1.12/9e026e2854514c4b8af726610c6407db/lib
+    /home/bobfang/.xmake/packages/o/openssl3/3.0.7/e197aa355a51487f89ddfeab16707b44/lib
+    /home/bobfang/.xmake/packages/d/double-conversion/v3.3.0/3db029d9260c432eb5af53e7ef24fcbd/lib
+    /home/bobfang/.xmake/packages/g/glog/v0.6.0/97af1b735ee34653bce0fbb94d6210b8/lib
+    /home/bobfang/.xmake/packages/g/gflags/v2.2.2/96c154a9ef6c401fb5551d54f6330dbf/lib
+    /home/bobfang/.xmake/packages/f/fmt/10.2.1/505ef80b74ab4417864cda7867f207e9/lib
+    /home/bobfang/.xmake/packages/b/bzip2/1.0.8/f3d161f5f92f487e939d378246898edf/lib
+    /home/bobfang/.xmake/packages/l/lz4/v1.9.4/d4d593480882402f8a0bc78e8649d9cf/lib
+    /home/bobfang/.xmake/packages/z/zstd/v1.5.5/3c8af7caf7bc4d92ba18f14f3681775c/lib
+    /home/bobfang/.xmake/packages/g/gtest/v1.14.0/689a2929450e473e9cd578d308dd827f/lib
+    build/linux/arm64-v8a/release
 )
 target_sources(gtest-test PRIVATE
     tests/test_add.cpp
@@ -140,30 +134,28 @@ target_sources(gtest-test PRIVATE
 # target
 add_executable(xmake-test "")
 set_target_properties(xmake-test PROPERTIES OUTPUT_NAME "xmake-test")
-set_target_properties(xmake-test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/x86_64/release")
+set_target_properties(xmake-test PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/linux/arm64-v8a/release")
 add_dependencies(xmake-test demolib)
 target_include_directories(xmake-test PRIVATE
     src/demolib
 )
-target_include_directories(xmake-test PRIVATE
-    /home/ubuntu/.xmake/packages/f/folly/2022.08.29/3928b6f3d9f243bdafdaddb46e1f77f4/include
-    /home/ubuntu/.xmake/packages/b/boost/1.80.0/f82d4dca7dc844e89e4b80d3aa3e4eed/include
-    /home/ubuntu/.xmake/packages/l/libevent/2.1.12/79b493131d804853b402613ca7d86ec3/include
-    /home/ubuntu/.xmake/packages/o/openssl/1.1.1-q/0542b0491c164d4dadba757a6e268ba2/include
-    /home/ubuntu/.xmake/packages/d/double-conversion/v3.1.5/e029f0fe5b164280997aa8ab5d2a6640/include
-    /home/ubuntu/.xmake/packages/g/glog/v0.6.0/98bb9424878c424382eb29e8237853f9/include
-    /home/ubuntu/.xmake/packages/g/gflags/v2.2.2/0f545414272c459b907061d5e923ed20/include
-    /home/ubuntu/.xmake/packages/f/fmt/9.1.0/d363b063d73b40728217e45838c2553c/include
-    /home/ubuntu/.xmake/packages/b/bzip2/1.0.8/8db6bd46210f4711a452b7767b44748c/include
-    /home/ubuntu/.xmake/packages/l/lz4/v1.9.3/55e9aa7ed4014be287ab80a488dfae47/include
-    /home/ubuntu/.xmake/packages/z/zstd/v1.5.2/b78d253e3a8244dbb2b8ed324963b0c2/include
+target_include_directories(xmake-test SYSTEM PRIVATE
+    /home/bobfang/.xmake/packages/f/folly/2024.04.01/4256dda8f7dd4b8d872ed585ac433f5c/include
+    /home/bobfang/.xmake/packages/b/boost/1.84.0/f3bd7a099e92433ea53a951c7a951171/include
+    /home/bobfang/.xmake/packages/l/libevent/2.1.12/9e026e2854514c4b8af726610c6407db/include
+    /home/bobfang/.xmake/packages/o/openssl3/3.0.7/e197aa355a51487f89ddfeab16707b44/include
+    /home/bobfang/.xmake/packages/d/double-conversion/v3.3.0/3db029d9260c432eb5af53e7ef24fcbd/include
+    /home/bobfang/.xmake/packages/g/glog/v0.6.0/97af1b735ee34653bce0fbb94d6210b8/include
+    /home/bobfang/.xmake/packages/g/gflags/v2.2.2/96c154a9ef6c401fb5551d54f6330dbf/include
+    /home/bobfang/.xmake/packages/f/fmt/10.2.1/505ef80b74ab4417864cda7867f207e9/include
+    /home/bobfang/.xmake/packages/b/bzip2/1.0.8/f3d161f5f92f487e939d378246898edf/include
+    /home/bobfang/.xmake/packages/l/lz4/v1.9.4/d4d593480882402f8a0bc78e8649d9cf/include
+    /home/bobfang/.xmake/packages/z/zstd/v1.5.5/3c8af7caf7bc4d92ba18f14f3681775c/include
 )
 target_compile_definitions(xmake-test PRIVATE
     FOLLY_HAS_COROUTINES
 )
 target_compile_options(xmake-test PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-m64>
-    $<$<COMPILE_LANGUAGE:CXX>:-m64>
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
     $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
 )
@@ -183,21 +175,23 @@ if(MSVC)
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 target_link_libraries(xmake-test PRIVATE
+    folly
     folly_test_util
     follybenchmark
-    folly
     boost_context-mt
     boost_regex-mt
     boost_system-mt
     boost_atomic-mt
+    boost_date_time-mt
+    boost_iostreams-mt
     boost_program_options-mt
     boost_thread-mt
     boost_filesystem-mt
-    event_pthreads
+    event_core
     event_extra
+    event_pthreads
     event_openssl
     event
-    event_core
     ssl
     crypto
     double-conversion
@@ -213,21 +207,18 @@ target_link_libraries(xmake-test PRIVATE
     dl
 )
 target_link_directories(xmake-test PRIVATE
-    /home/ubuntu/.xmake/packages/f/folly/2022.08.29/3928b6f3d9f243bdafdaddb46e1f77f4/lib
-    /home/ubuntu/.xmake/packages/b/boost/1.80.0/f82d4dca7dc844e89e4b80d3aa3e4eed/lib
-    /home/ubuntu/.xmake/packages/l/libevent/2.1.12/79b493131d804853b402613ca7d86ec3/lib
-    /home/ubuntu/.xmake/packages/o/openssl/1.1.1-q/0542b0491c164d4dadba757a6e268ba2/lib
-    /home/ubuntu/.xmake/packages/d/double-conversion/v3.1.5/e029f0fe5b164280997aa8ab5d2a6640/lib
-    /home/ubuntu/.xmake/packages/g/glog/v0.6.0/98bb9424878c424382eb29e8237853f9/lib
-    /home/ubuntu/.xmake/packages/g/gflags/v2.2.2/0f545414272c459b907061d5e923ed20/lib
-    /home/ubuntu/.xmake/packages/f/fmt/9.1.0/d363b063d73b40728217e45838c2553c/lib
-    /home/ubuntu/.xmake/packages/b/bzip2/1.0.8/8db6bd46210f4711a452b7767b44748c/lib
-    /home/ubuntu/.xmake/packages/l/lz4/v1.9.3/55e9aa7ed4014be287ab80a488dfae47/lib
-    /home/ubuntu/.xmake/packages/z/zstd/v1.5.2/b78d253e3a8244dbb2b8ed324963b0c2/lib
-    build/linux/x86_64/release
-)
-target_link_options(xmake-test PRIVATE
-    -m64
+    /home/bobfang/.xmake/packages/f/folly/2024.04.01/4256dda8f7dd4b8d872ed585ac433f5c/lib
+    /home/bobfang/.xmake/packages/b/boost/1.84.0/f3bd7a099e92433ea53a951c7a951171/lib
+    /home/bobfang/.xmake/packages/l/libevent/2.1.12/9e026e2854514c4b8af726610c6407db/lib
+    /home/bobfang/.xmake/packages/o/openssl3/3.0.7/e197aa355a51487f89ddfeab16707b44/lib
+    /home/bobfang/.xmake/packages/d/double-conversion/v3.3.0/3db029d9260c432eb5af53e7ef24fcbd/lib
+    /home/bobfang/.xmake/packages/g/glog/v0.6.0/97af1b735ee34653bce0fbb94d6210b8/lib
+    /home/bobfang/.xmake/packages/g/gflags/v2.2.2/96c154a9ef6c401fb5551d54f6330dbf/lib
+    /home/bobfang/.xmake/packages/f/fmt/10.2.1/505ef80b74ab4417864cda7867f207e9/lib
+    /home/bobfang/.xmake/packages/b/bzip2/1.0.8/f3d161f5f92f487e939d378246898edf/lib
+    /home/bobfang/.xmake/packages/l/lz4/v1.9.4/d4d593480882402f8a0bc78e8649d9cf/lib
+    /home/bobfang/.xmake/packages/z/zstd/v1.5.5/3c8af7caf7bc4d92ba18f14f3681775c/lib
+    build/linux/arm64-v8a/release
 )
 target_sources(xmake-test PRIVATE
     src/main.cpp
