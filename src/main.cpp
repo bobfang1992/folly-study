@@ -5,6 +5,8 @@
 #include <folly/init/Init.h>
 #include <iostream>
 
+#include <fmt/format.h>
+
 #include "demolib.h"
 
 folly::coro::Task<int> slow()
@@ -22,5 +24,6 @@ int main(int argc, char **argv)
         slow().scheduleOn(folly::getGlobalCPUExecutor().get()));
     std::cout << result << std::endl;
     std::cout << Demolib::add(1, 2) << std::endl;
+    fmt::print("hello world from fmt\n");
     return 0;
 }
