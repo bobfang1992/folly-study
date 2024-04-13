@@ -1,5 +1,5 @@
 add_rules("mode.debug", "mode.release")
-add_requires("folly 2022.08.29", {configs = {cxxstd = "c++20"}})
+add_requires("folly 2024.04.01", {configs = {cxxstd = "c++20"}})
 add_requires("fmt")
 add_requires("gtest")
 
