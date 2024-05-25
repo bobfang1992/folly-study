@@ -2,6 +2,8 @@ add_rules("mode.debug", "mode.release")
 add_requires("folly 2024.04.01", {configs = {cxxstd = "c++20"}})
 add_requires("fmt")
 add_requires("gtest")
+add_requires("benchmark")
+add_requires("rapidjson")
 
 set_languages("c++20")
 
@@ -27,4 +29,16 @@ target("gtest-test")
     add_packages("folly")
     add_packages("fmt")
     add_packages("gtest")
+
+
+target("benchmark-test")
+    add_deps("demolib")
+    set_kind("binary")
+    add_files("benchmark/*.cpp")
+    add_includedirs("src/demolib")
+    add_defines("FOLLY_HAS_COROUTINES")
+    add_packages("folly")
+    add_packages("fmt")
+    add_packages("rapidjson")
+    add_packages("benchmark")
 

@@ -1,0 +1,40 @@
+#include <benchmark/benchmark.h>
+
+#include "rapidjson/document.h"
+#include "folly/dynamic.h"
+#include "folly/json.h"
+
+using namespace rapidjson;
+
+const char * json = R"(
+{
+    "hello": "world",
+    "t": true ,
+    "f": false,
+    "n": null,
+    "i": 123,
+    "pi": 3.1416,
+    "a": [1, 2, 3, 4]
+}
+)";
+
+static void BM_rapidjson(benchmark::State& state) {
+  // Perform setup here
+  for (auto _ : state) {
+    Document d;
+    d.Parse(json);
+  }
+}
+
+static void BM_folly_dynamic(benchmark::State& state) {
+  // Perform setup here
+  for (auto _ : state) {
+    folly::dynamic d = folly::parseJson(json);
+  }
+}
+// Register the function as a benchmark
+BENCHMARK(BM_rapidjson);
+BENCHMARK(BM_folly_dynamic);
+
+// Run the benchmark
+BENCHMARK_MAIN();
