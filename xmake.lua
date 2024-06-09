@@ -4,6 +4,7 @@ add_requires("fmt")
 add_requires("gtest")
 add_requires("benchmark")
 add_requires("rapidjson")
+add_requires("libunwind")
 
 set_languages("c++20")
 
@@ -19,6 +20,7 @@ target("xmake-test")
     add_deps("demolib")
     add_packages("folly")
     add_packages("fmt")
+    add_packages("libunwind")
 
 target("gtest-test")
     add_deps("demolib")
