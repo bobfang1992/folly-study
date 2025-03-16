@@ -1,8 +1,8 @@
 #include <benchmark/benchmark.h>
 
-#include "rapidjson/document.h"
 #include "folly/dynamic.h"
 #include "folly/json.h"
+#include "rapidjson/document.h"
 #include "simdjson.h"
 using namespace rapidjson;
 
@@ -18,31 +18,25 @@ const char *json = R"(
 }
 )";
 
-static void BM_rapidjson(benchmark::State &state)
-{
+static void BM_rapidjson(benchmark::State &state) {
   // Perform setup here
-  for (auto _ : state)
-  {
+  for (auto _ : state) {
     Document d;
     d.Parse(json);
   }
 }
 
-static void BM_folly_dynamic(benchmark::State &state)
-{
+static void BM_folly_dynamic(benchmark::State &state) {
   // Perform setup here
-  for (auto _ : state)
-  {
+  for (auto _ : state) {
     folly::dynamic d = folly::parseJson(json);
   }
 }
 
-static void BM_simdjosn(benchmark::State &state)
-{
+static void BM_simdjosn(benchmark::State &state) {
   using namespace simdjson; // optional
   // Perform setup here
-  for (auto _ : state)
-  {
+  for (auto _ : state) {
     simdjson::dom::parser parser;
     simdjson::dom::element doc = parser.parse(std::string(json));
   }
